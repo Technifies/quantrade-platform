@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { query } from '../config/database';
 import { logger } from '../utils/logger';
 
-// Simple interface extending Express Request
+// AuthenticatedRequest interface properly extending Express Request
 export interface AuthenticatedRequest extends Request {
   user?: {
     id: string;
