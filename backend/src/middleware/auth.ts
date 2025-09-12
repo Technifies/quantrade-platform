@@ -3,8 +3,13 @@ import jwt from 'jsonwebtoken';
 import { query } from '../config/database';
 import { logger } from '../utils/logger';
 
-// Type alias for authenticated requests - using standard Express Request
-export type AuthenticatedRequest = Request;
+// Simple interface extending Express Request
+export interface AuthenticatedRequest extends Request {
+  user?: {
+    id: string;
+    email: string;
+  };
+}
 
 export const authMiddleware = async (
   req: AuthenticatedRequest,
