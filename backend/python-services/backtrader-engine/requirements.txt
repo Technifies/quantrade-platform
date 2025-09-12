@@ -6,7 +6,7 @@ numpy>=1.26.2
 yfinance>=0.2.30
 pydantic>=2.6.0
 python-multipart>=0.0.9
-ta-lib==0.4.20
+# ta-lib==0.4.20  # Removed due to Python 3.13 compatibility issues
 scikit-learn>=1.4.0
 scipy>=1.12.0
 matplotlib>=3.8.0
