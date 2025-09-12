@@ -3,12 +3,8 @@ import jwt from 'jsonwebtoken';
 import { query } from '../config/database';
 import { logger } from '../utils/logger';
 
-export interface AuthenticatedRequest extends Request {
-  user?: {
-    id: string;
-    email: string;
-  };
-}
+// Type alias for authenticated requests - using standard Express Request
+export type AuthenticatedRequest = Request;
 
 export const authMiddleware = async (
   req: AuthenticatedRequest,
@@ -16,7 +12,8 @@ export const authMiddleware = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const authHeader = req.headers.authorization;
+    // Access headers directly from Express Request - this will work in all environments
+    const authHeader = req.get('authorization') || req.headers['authorization'] as string;
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       res.status(401).json({ error: 'Access token required' });
