@@ -1,0 +1,86 @@
+services:
+  # PostgreSQL Database
+  - type: pserv
+    name: quantrade-database
+    databaseName: quantrade
+    user: quantrade
+    plan: starter
+    region: oregon
+
+  # Redis Cache - must specify IP allow list
+  - type: redis
+    name: quantrade-redis
+    plan: starter
+    region: oregon
+    ipAllowList:
+      - description: "Allow all traffic"
+        source: "0.0.0.0/0"
+
+  # Node Backend API Service
+  - type: web
+    name: quantrade-backend
+    env: node
+    plan: starter
+    region: oregon
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: quantrade-database
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: quantrade-redis
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: DHAN_BASE_URL
+        value: https://api.dhan.co
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 100
+      - key: LOG_LEVEL
+        value: info
+      - key: BACKTRADER_SERVICE_HOST
+        fromService:
+          type: web
+          name: quantrade-backtrader
+          property: host
+      - key: BACKTRADER_SERVICE_PORT
+        fromService:
+          type: web
+          name: quantrade-backtrader
+          property: port
+
+  # Python Backtrader Service
+  - type: web
+    name: quantrade-backtrader
+    env: python
+    plan: starter
+    region: oregon
+    rootDir: backend/python-services/backtrader-engine
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m uvicorn app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHONPATH
+        value: "/opt/render/project/src"
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: quantrade-redis
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: quantrade-redis
+          property: connectionString
