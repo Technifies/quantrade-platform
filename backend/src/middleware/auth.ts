@@ -9,6 +9,7 @@ export interface AuthenticatedRequest extends Request {
     email: string;
   };
   headers: any;
+  body: any;
 }
 
 export const authMiddleware = async (
