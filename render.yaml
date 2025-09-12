@@ -79,8 +79,17 @@ services:
           type: redis
           name: quantrade-redis
           property: connectionString
-      - key: REDIS_URL
-        fromService:
-          type: redis
-          name: quantrade-redis
+      - key: DATABASE_URL
+        fromDatabase:
+          name: quantrade-database
           property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: LOG_LEVEL
+        value: info
+      - key: TRADING_HOURS
+        value: "09:15-15:30"
+      - key: MAX_TRADE_RISK_PERCENTAGE
+        value: "2.0"
+      - key: MARKET_TYPE
+        value: "equity"
