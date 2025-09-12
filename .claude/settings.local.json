@@ -20,7 +20,11 @@
       "Bash(chmod:*)",
       "Bash(git remote get-url:*)",
       "WebFetch(domain:github.com)",
-      "Bash(gh repo create:*)"
+      "Bash(gh repo create:*)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(npm run build:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": [],
     "ask": []
