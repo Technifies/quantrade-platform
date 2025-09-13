@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { runMigration } from '../../scripts/migrate';
+import { runMigration } from '../utils/migrate';
 import { logger } from '../utils/logger';
 
 const router = Router();
