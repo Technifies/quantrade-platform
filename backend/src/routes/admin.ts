@@ -4,7 +4,25 @@ import { logger } from '../utils/logger';
 
 const router = Router();
 
-// Migration endpoint (for production setup)
+// Migration endpoint (for production setup) - both GET and POST
+router.get('/migrate', async (req, res) => {
+  try {
+    logger.info('Starting database migration via GET API...');
+    await runMigration();
+    res.json({ 
+      success: true, 
+      message: 'Database migration completed successfully' 
+    });
+  } catch (error) {
+    logger.error('Migration failed:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Migration failed', 
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+});
+
 router.post('/migrate', async (req, res) => {
   try {
     logger.info('Starting database migration via API...');
