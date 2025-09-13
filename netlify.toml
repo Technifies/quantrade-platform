@@ -11,14 +11,14 @@
   status = 200
 
 [context.production.environment]
-  VITE_API_URL = "https://quantrade-backend.onrender.com"
-  VITE_WS_URL = "wss://quantrade-backend.onrender.com"
+  VITE_API_URL = "https://site--quant-platform--lt5sgl89h54n.code.run"
+  VITE_WS_URL = "wss://site--quant-platform--lt5sgl89h54n.code.run"
   VITE_APP_NAME = "QuantTrade Platform"
 
 [context.deploy-preview.environment]
-  VITE_API_URL = "https://quantrade-backend.onrender.com"
-  VITE_WS_URL = "wss://quantrade-backend.onrender.com"
+  VITE_API_URL = "https://site--quant-platform--lt5sgl89h54n.code.run"
+  VITE_WS_URL = "wss://site--quant-platform--lt5sgl89h54n.code.run"
 
 [context.branch-deploy.environment]
-  VITE_API_URL = "https://quantrade-backend.onrender.com"
-  VITE_WS_URL = "wss://quantrade-backend.onrender.com"
+  VITE_API_URL = "https://site--quant-platform--lt5sgl89h54n.code.run"
+  VITE_WS_URL = "wss://site--quant-platform--lt5sgl89h54n.code.run"

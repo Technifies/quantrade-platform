@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User } from '../types/trading';
+import { buildApiUrl, API_ENDPOINTS, getAuthHeaders } from '../config/api';
 
 interface AuthContextType {
   user: User | null;
@@ -37,17 +38,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const token = localStorage.getItem('authToken');
       if (token) {
-        // Validate token and fetch user data
-        const response = await fetch('/api/auth/profile', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        
-        if (response.ok) {
-          const userData = await response.json();
-          setUser(userData);
-        } else {
-          localStorage.removeItem('authToken');
-        }
+        // Skip profile validation for now - just check if token exists
+        // The profile endpoint has issues, so we'll validate on first login attempt
+        setLoading(false);
+        return;
       }
     } catch (error) {
       console.error('Auth check failed:', error);
@@ -59,17 +53,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const response = await fetch('/api/auth/login', {
+      console.log('Attempting login to:', buildApiUrl(API_ENDPOINTS.auth.login));
+      const response = await fetch(buildApiUrl(API_ENDPOINTS.auth.login), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
 
+      console.log('Login response status:', response.status);
+
       if (response.ok) {
-        const { user: userData, token } = await response.json();
+        const responseData = await response.json();
+        console.log('Login response data:', responseData);
+
+        const { user: userData, token } = responseData;
         localStorage.setItem('authToken', token);
         setUser(userData);
+        console.log('Login successful, user set:', userData);
         return true;
+      } else {
+        const errorData = await response.text();
+        console.error('Login failed with status:', response.status, errorData);
       }
       return false;
     } catch (error) {
@@ -80,7 +84,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const register = async (email: string, password: string): Promise<boolean> => {
     try {
-      const response = await fetch('/api/auth/register', {
+      const response = await fetch(buildApiUrl(API_ENDPOINTS.auth.register), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -103,9 +107,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const token = localStorage.getItem('authToken');
       if (token) {
-        await fetch('/api/auth/logout', {
+        await fetch(buildApiUrl(API_ENDPOINTS.auth.logout), {
           method: 'POST',
-          headers: { Authorization: `Bearer ${token}` }
+          headers: getAuthHeaders()
         });
       }
     } catch (error) {
@@ -118,13 +122,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const updateProfile = async (updates: Partial<User>): Promise<boolean> => {
     try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch('/api/auth/profile', {
+      const response = await fetch(buildApiUrl(API_ENDPOINTS.auth.profile), {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(updates)
       });
 
