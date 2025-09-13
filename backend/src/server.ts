@@ -37,6 +37,7 @@ import backtestRoutes from './routes/backtests';
 import tradingRoutes from './routes/trading';
 import riskRoutes from './routes/risk';
 import dhanRoutes from './routes/dhan';
+import adminRoutes from './routes/admin';
 
 // Services
 import { WebSocketService } from './services/websocket';
@@ -101,6 +102,7 @@ app.use('/api/backtests', authMiddleware, backtestRoutes);
 app.use('/api/trading', authMiddleware, tradingRoutes);
 app.use('/api/risk', authMiddleware, riskRoutes);
 app.use('/api/dhan', authMiddleware, dhanRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Error handling
 app.use(errorHandler);
