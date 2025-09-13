@@ -9,7 +9,7 @@ import os
 
 # Add utils to path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from utils.config import Config
+from utils.config import NORTHFLANK_SERVICES, MONITORING_CONFIG, FEATURES
 from utils.api_client import APIClient
 from utils.db_client import DatabaseClient
 
