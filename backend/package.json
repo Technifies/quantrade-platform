@@ -8,7 +8,7 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "start:dev": "npx ts-node src/server.ts",
-    "migrate": "node dist/migrations/migrate.js",
+    "migrate": "npx ts-node scripts/migrate.ts",
     "test": "jest"
   },
   "dependencies": {

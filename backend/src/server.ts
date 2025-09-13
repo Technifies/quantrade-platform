@@ -82,7 +82,7 @@ app.get('/health', (req, res) => {
     environment: process.env.NODE_ENV,
     services: {
       database: 'connected',
-      redis: 'connected'
+      redis: process.env.REDIS_URL ? 'connected' : 'disabled'
     }
   });
 });
